@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'captured_photo.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -6,6 +9,23 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
+
+  File _image;
+
+  Future getImage(bool isCamera) async {
+    File image;
+
+    if (isCamera) {
+      image = await ImagePicker.pickImage(source: ImageSource.camera);
+    } else {
+      image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    }
+    setState(() {
+      _image = image;
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ImageView(photo: _image)),);
+    });
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +83,7 @@ class _WelcomeState extends State<Welcome> {
                       margin: const EdgeInsets.all(20),
                       child: FlatButton(
                           onPressed: () {
-                            
+                            getImage(true);
                           },
                           child: Center(
                             child: Row(
@@ -93,7 +113,7 @@ class _WelcomeState extends State<Welcome> {
                       ),
                       child: FlatButton(
                           onPressed: () {
-                           
+                           getImage(false);
                           },
                           child: Center(
                             child: Row(
